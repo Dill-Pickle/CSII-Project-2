@@ -82,11 +82,12 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 {
 	char answer;
 
-	cout << "Do you want to move: Left(l), Right(r), or Quit(q) the game?" << endl;
-	cin >> answer;
 
-	for (int i = 0; hero_pos == 9; i++)
+
+	for (int i = 0; hero_pos != 9; i++)
 	{
+		cout << "Do you want to move: Left(l), Right(r), or Quit(q) the game?" << endl;
+		cin >> answer;
 		if (answer == 'L' || answer== 'l')
 		{
 			if (hero_pos == 0)
