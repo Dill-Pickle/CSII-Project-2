@@ -116,10 +116,11 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 
 					cout << "Hero rolled a " << hero << " Monster rolled a " << monster;
 					if (heropow < monster)
+					{
 						cout << "You LOST" << endl;
-					hero = monster - hero;
-					heropow -= hero;
-				}
+						hero = monster - hero;
+						heropow -= hero;
+					}
 				}
 				if (hero_pos == two)
 				{
@@ -128,9 +129,11 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 
 					cout << "Hero rolled a " << heropow << " Monster rolled a " << monster;
 					if (heropow < monster)
+					{
 						cout << "You LOST" << endl
 						heropow -= monster;
 						hero_pos = heropow;
+					}
 				}
 				if (hero_pos == three)
 				{
@@ -139,9 +142,11 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 
 					cout << "Hero rolled a " << heropow << " Monster rolled a " << monster;
 					if (heropow < monster)
+					{
 						cout << "You LOST" << endl
 						heropow -= monster;
 						hero_pos = heropow;
+					}
 				}
 			}
 			else hero_pos += 1;
