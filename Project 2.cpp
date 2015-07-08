@@ -130,13 +130,14 @@ void move(int road[], int N, int hero_pos, int one, int two, int three)
 							hero = monster - hero;
 							heropow -= hero;
 						}
-					}
+					
 					if (hero > monster)
 					{
 						cout << "You Won!" << endl;
 						monsterkilled++;
 					}
 					}
+				}
 					if (hero_pos == two)
 					{
 						hero = rand() % heropow;
