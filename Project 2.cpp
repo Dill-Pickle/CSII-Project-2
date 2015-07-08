@@ -96,7 +96,7 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 			}
 			else hero_pos -= 1;
 		}
-		if (answer == 'R' || 'r')
+		else if (answer == 'R' || 'r')
 		{
 			if (hero_pos == 9)
 			{
