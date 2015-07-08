@@ -82,7 +82,8 @@ void creatures(int road[], int N,int hero_pos, int one, int two, int three)
 void move(int road[], int N, int hero_pos,int one, int two, int three)
 {
 	char answer;
-
+	int monsterkilled = 0;
+	int heropow = 10;
 
 
 	for (int i = 0; hero_pos != 9; i++)
@@ -111,6 +112,18 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 		}
 		else if (answer == 'q' || answer == 'Q')
 		{
+			exit(0);
+		}
+		
+		if (heropow == 0)
+		{
+			cout << "Your strength has ran out, warrior! Game over"<<endl;
+			exit(0);
+		}
+		
+		if (monsterskilled == 3)
+		{
+			cout << "You have killed all the monsters! Good job" << endl;
 			exit(0);
 		}
 	}
