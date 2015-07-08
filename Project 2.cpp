@@ -13,7 +13,7 @@ void main()
 	srand(time(0));
 	const int N = 10;
 	int road[N];
-	int hero_pos;
+	int hero_pos=0;
 	int one=0;
 	int two=0;
 	int three=0;
