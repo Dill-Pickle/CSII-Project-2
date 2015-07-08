@@ -1,6 +1,7 @@
 #include <iostream>
 #include <time.h>
 #include <string>
+#include <stdlib.h>
 using namespace std;
 
 void show(int [],int);
@@ -96,7 +97,7 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 			}
 			else hero_pos -= 1;
 		}
-		else if (answer == 'R' || 'r')
+		else if (answer == 'R' || answer == 'r')
 		{
 			if (hero_pos == 9)
 			{
@@ -107,6 +108,10 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 				cout << "You have come across a Monster!" << endl;
 			}
 			else hero_pos += 1;
+		}
+		else if (answer == 'q' || answer == 'Q')
+		{
+			exit(0);
 		}
 	}
 }
