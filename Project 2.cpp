@@ -4,7 +4,7 @@
 using namespace std;
 
 void show(int [],int);
-void creatures(int [], int, int, int, int, int);
+void creatures(int [], int, int, int, int);
 void move(int[],int,int,int,int,int);
 void gameover();
 
