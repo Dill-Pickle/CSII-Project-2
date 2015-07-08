@@ -98,7 +98,7 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 			}
 			else hero_pos -= 1;
 		}
-		else if (answer == 'R' || answer == 'r')
+		else if (answer == 'R' || answer=='r')
 		{
 			if (hero_pos == 9)
 			{
@@ -107,16 +107,19 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 			if (hero_pos == one || hero_pos == two || hero_pos == three)
 			{
 				cout << "You have come across a Monster!" << endl;
+				
 				if (hero_pos == one)
 				{
+					for (int i = 0; heropow != 0 || heropow < monster; i++){
 					hero = rand() % heropow;
 					monster = rand() % 3;
 
-					cout << "Hero rolled a " << heropow << " Monster rolled a " << monster;
+					cout << "Hero rolled a " << hero << " Monster rolled a " << monster;
 					if (heropow < monster)
-						cout << "You LOST" << endl
-						heropow -= monster;
-						hero_pos = heropow;
+						cout << "You LOST" << endl;
+					hero = monster - hero;
+					heropow -= hero;
+				}
 				}
 			}
 			else hero_pos += 1;
