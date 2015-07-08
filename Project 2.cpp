@@ -36,7 +36,7 @@ void show(int road[], int N)
 
 void creatures(int road[], int N,int hero_pos, int one, int two, int three)
 {
-	int hero_pos = 0;
+	hero_pos = 0;
 	one= rand() % 9 + 1;
 	two = rand() % 9 + 1;
 	three = rand() % 9 + 1;
@@ -87,7 +87,7 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 
 	for (int i = 0; hero_pos == 9; i++)
 	{
-		if (answer == 'L' || 'l')
+		if (answer == 'L' || answer== 'l')
 		{
 			if (hero_pos == 0)
 			{
