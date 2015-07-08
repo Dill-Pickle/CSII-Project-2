@@ -1,211 +1,223 @@
+/* Chance Robinson
+   Simple RPG lab1 */
+
 #include <iostream>
 #include <time.h>
-#include <string>
-#include <stdlib.h>
+#include <cmath>
+
 using namespace std;
 
-void show(int[], int);
-void creatures(int[], int, int, int, int, int);
-void move(int[], int, int, int, int, int);
-void gameover();
+void showRoad(int road[],int N);
+void positionCreatures(int road[],int N, int creatureHealth[]);
+int moveHero(int road[], int N, int &heroStrength, int hero_pos,char *creatures[],int creatureHealth[],int numberCreatures, bool &gameOver);
+int randomEncounter(int heroStrength, char *creatures[],int creatureHealth[],int numberCreatures, int road[], int hero_pos);
+int fightingRules(int heroStrength, int creatureIndex, int creatureHealth[], char *creatures[]);
+bool winConditions(int heroStrength, int creatureHealth[], char *creatures[]);
 
-void main()
+int main()
 {
-	srand(time(0));
 	const int N = 10;
-	int road[N];
+	const int numberCreatures = 3;
+	char *creatures[numberCreatures] = {"Kobold","Orc","Ogre"};
+	int creatureHealth[numberCreatures] = {3,5,7};
+	int road[N] = {0};
 	int hero_pos = 0;
-	int one = 0;
-	int two = 0;
-	int three = 0;
-
-	for (int i = 0; i < N; i++) road[i] = 0;
-
-	show(road, N);
-	creatures(road, N, hero_pos, one, two, three);
-	move(road, N, hero_pos, one, two, three);
-}
-
-void show(int road[], int N)
-{
-	for (int i = 0; i < N; i++)
-	{
-		cout << road[i];
-	}
-	cout << endl;
-}
-
-void creatures(int road[], int N, int hero_pos, int one, int two, int three)
-{
-	hero_pos = 0;
-	one = rand() % 9 + 1;
-	two = rand() % 9 + 1;
-	three = rand() % 9 + 1;
-
-	road[hero_pos] = 10;
-
+	bool gameOver = false;
+	int heroStrength = 10;
+	srand(time(0));
+	
+	//Sets the initial player position/ health
+	road[hero_pos] = heroStrength;
+	positionCreatures(road,N,creatureHealth);
+	showRoad(road,N);
+	//The main game loop, continues until the gameOver conditions have been met.
+	//You can either win, lose, or quit while moving.
 	do
 	{
-		one = rand() % 9 + 1;
-		two = rand() % 9 + 1;
-		three = rand() % 9 + 1;
-	} while (one == two || one == three || two == three);
-
-	int numbers[3] = { one, two, three };
-	int temp;
-
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 1; j < 3; j++)
-		{
-			if (numbers[j] <= numbers[i])
-			{
-				temp = numbers[i];
-				numbers[i] = numbers[j];
-				numbers[j] = temp;
-			}
-		}
-	}
+		hero_pos = moveHero(road,N,heroStrength,hero_pos,creatures,creatureHealth,numberCreatures,gameOver);
+		gameOver = winConditions(heroStrength,creatureHealth,creatures);
+	}while(gameOver == false);
 
 
-	road[numbers[0]] = 3;
-	road[numbers[1]] = 7;
-	road[numbers[2]] = 5;
+	cin.ignore();
+	cin.ignore();
+	return 0;
+}
 
+//Function used to draw the road array
+void showRoad(int road[],int N)
+{
 	for (int i = 0; i < N; i++)
 	{
-		cout << road[i];
+	cout << road[i];
+	cout << " ";
+	}
+	
+}
+
+//Generates the 3 random creature positions and places their numbers
+void positionCreatures(int road[],int N, int creatureHealth[])
+{
+	int creaturePostion = 0;
+	int level = 0;
+
+	
+	for (int i = 0; i < 3; i++)
+	{
+		do
+		{
+		creaturePostion = rand()%9 + 1;
+		}while(road[creaturePostion] == 1);
+		road[creaturePostion] = 1;
+	}
+	
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (road[i] == 1)
+		{
+			road[i] = creatureHealth[level];
+			level = level + 1;
+		}
 	}
 
 }
 
-void move(int road[], int N, int hero_pos, int one, int two, int three)
+//Moves the hero. If the hero enters a space > 0 then he has an encounter! If they enter anything but left or right the game quits.
+int moveHero(int road[], int N, int &heroStrength, int hero_pos,char *creatures[],int creatureHealth[],int numberCreatures,bool &gameOver)
 {
-	char answer;
-	int monsterkilled = 0;
-	int heropow = 10;
-	int monster;
-	int hero;
-
-
-	for (int i = 0; hero_pos != 9; i++)
-	{
-		cout << "Do you want to move: Left(l), Right(r), or Quit(q) the game?" << endl;
-		cin >> answer;
-		if (answer == 'L' || answer == 'l')
+	char move = 'l';
+	cout << endl;
+	cout << "Move left or right? (l/r)";
+	cin >> move;
+	cout << endl;
+    if (move == 'r' || move == 'R')
+    {
+		if (road[hero_pos + 1] > 0)
 		{
-			if (hero_pos == 0)
-			{
-				cout << "You cannot go left." << endl;
-			}
-			else hero_pos -= 1;
+			heroStrength = randomEncounter(heroStrength,creatures,creatureHealth,numberCreatures,road,hero_pos);
 		}
-		else if (answer == 'R' || answer == 'r')
+		 road[hero_pos] = 0;
+		 hero_pos = (hero_pos + 1);
+		 road[hero_pos] = heroStrength;
+    }
+  
+    if (move == 'l' || move == 'L')
+    {
+		//Checks to make sure the player doesn't move off the map
+		if(hero_pos == 0)
 		{
-			if (hero_pos == 9)
-			{
-				cout << "You cannot go any further." << endl;
-			}
-			if (hero_pos == one || hero_pos == two || hero_pos == three)
-			{
-				cout << "You have come across a Monster!" << endl;
-
-				if (hero_pos == one)
-				{
-					for (int i = 0; heropow != 0 || hero < monster; i++){
-						hero = rand() % heropow;
-						monster = rand() % 3;
-
-						cout << "Hero rolled a " << hero << " Monster rolled a " << monster << endl;
-						while (hero == monster)
-						{
-							hero = rand() % heropow;
-							monster = rand() % 3;
-
-							cout << "Hero rolled a " << hero << " Monster rolled a " << monster << endl;
-						}
-						if (hero < monster)
-						{
-							cout << "You LOST" << endl;
-							hero = monster - hero;
-							heropow -= hero;
-						}
-
-						if (hero > monster)
-						{
-							cout << "You Won!" << endl;
-							monsterkilled++;
-						}
-					}
-					}
-					if (hero_pos == two)
-					{
-						hero = rand() % heropow;
-						monster = rand() % 5;
-
-						cout << "Hero rolled a " << heropow << " Monster rolled a " << monster<<endl;
-						while (hero == monster)
-						{
-							hero = rand() % heropow;
-							monster = rand() % 5;
-
-							cout << "Hero rolled a " << hero << " Monster rolled a " << monster<<endl;
-						}
-						if (heropow < monster)
-						{
-							cout << "You LOST" << endl;
-								heropow -= monster;
-							hero_pos = heropow;
-						}
-						if (hero > monster)
-						{
-							cout << "You Won!" << endl;
-							monsterkilled++;
-						}
-					}
-					if (hero_pos == three)
-					{
-						hero = rand() % heropow;
-						monster = rand() % 7;
-
-						cout << "Hero rolled a " << heropow << " Monster rolled a " << monster<<endl;
-						while (hero == monster)
-						{
-							hero = rand() % heropow;
-							monster = rand() % 7;
-
-							cout << "Hero rolled a " << hero << " Monster rolled a " << monster<<endl;
-						}
-						if (heropow < monster)
-						{
-							cout << "You LOST" << endl;
-								heropow -= monster;
-							hero_pos = heropow;
-						}
-						if (hero > monster)
-						{
-							cout << "You Won!" << endl;
-							monsterkilled++;
-						}
-					}
-				}
-				else hero_pos += 1;
-			}
-			else if (answer == 'q' || answer == 'Q')
-			{
-				exit(0);
-			}
-
-			if (heropow == 0)
-			{
-				cout << "Your strength has ran out, warrior! Game over" << endl;
-				exit(0);
-			}
-
-			if (monsterkilled == 3)
-			{
-				cout << "You have killed all the monsters! Good job" << endl;
-				exit(0);
-			}
+			cout << "You can't move off your 1D world!" << endl;
+		}
+		else
+		{
+		 road[hero_pos] = 0;
+		 hero_pos = (hero_pos - 1);
+		 road[hero_pos] = heroStrength;
 		}
 	}
+	else
+    {	
+		gameOver = true;
+	}
+	showRoad(road,N);
+	return hero_pos;
+}
+
+//Generates the random encounter. What is encountered is determined by comparing the number in the road array to the known creature indexes
+//Combat is handled by the fightingRulesFunction. The heroStrength is returned
+int randomEncounter(int heroStrength, char *creatures[],int creatureHealth[],int numberCreatures, int road[], int hero_pos)
+{
+	int creatureIndex = 0;
+	if (road[hero_pos + 1] == creatureHealth[0])
+	{
+		creatureIndex = 0;
+		cout << "Oh no! You have encountered a terrible " << creatures[0] << "!!!!!" << endl;
+		heroStrength = fightingRules(heroStrength,creatureIndex,creatureHealth,creatures);
+	}
+	else if (road[hero_pos + 1] == creatureHealth[1])
+	{
+		creatureIndex = 1;
+		cout << "Oh no! You have encountered a terrible " << creatures[1] << "!!!!!" << endl;
+		heroStrength = fightingRules(heroStrength,creatureIndex,creatureHealth,creatures);
+	}
+	else if (road[hero_pos + 1] == creatureHealth[2])
+	{
+		creatureIndex = 2;
+		cout << "Oh no! You have encountered a terrible " << creatures[2] << "!!!!!" << endl;
+		heroStrength = fightingRules(heroStrength,creatureIndex,creatureHealth,creatures);
+	}
+	return heroStrength;
+}
+
+//Fighting rules are based on the 2 random numbers generated by the current heroStrength and the creatureHealth of the current creature index
+//heroAttack and creatureAttack are where those random attack values are stored so they can be compared.
+ int fightingRules(int heroStrength, int creatureIndex, int creatureHealth[], char *creatures[])
+ {
+	 int heroAttack = 0;
+	 int creatureAttack = 0;
+	 bool creatureDead = false;
+
+	 do
+	 {
+		if (heroStrength <= 0)
+		{
+			cout << "You have been defeated by the Evil " << creatures[creatureIndex] << "." << endl;
+			break;
+		}
+		 heroAttack = rand()%heroStrength;
+		 creatureAttack = rand()%creatureHealth[creatureIndex];
+			
+			cout << "You swing your weapon with a might of " << heroAttack << " attack power." << endl;
+			cout << "The " << creatures[creatureIndex] << " flails wildly with an attack power of " << creatureAttack << "." << endl;
+		if (heroAttack > creatureAttack)
+		{
+			cout << "You have vanquished the mighty " << creatures[creatureIndex] << "!" << endl;
+			cout << "Your current health and strength is: " << heroStrength << endl;
+			creatureHealth[creatureIndex] = 0;
+			creatureDead = true;
+		}
+		else if (creatureAttack > heroAttack)
+		{
+			cout << "The " << creatures[creatureIndex] << " strikes you with a powerful blow!" << endl;
+			heroStrength = (heroStrength - (creatureAttack - heroAttack));
+			cout << "Your current health and strength is: " << heroStrength << endl;
+		}
+		else if (heroAttack == creatureAttack)
+		{
+			cout << "The " << creatures[creatureIndex] << " battles you to a stalemate!" << endl;
+		}
+		
+	} while(creatureDead == false);
+
+	 return heroStrength;
+ }
+
+ //The win conditions are checked after every move. Really this just checks to see if the game is over, but it does output whether you won or lost.
+ //lose means the heroStrength value dropped to 0 during the last move. Win means the last creatureIndex's health value dropped to zero last turn AND
+ //that the hero's strength is more then 0.
+ //if neither of those conditions are met, the game loop continues.
+bool winConditions(int heroStrength, int creatureHealth[], char *creatures[])
+ {
+	 bool gameOver = false;
+	 if (heroStrength <= 0)
+	 {
+		 cout << endl;
+		 cout << "GAME OVER. Because of your defeat, all is lost!";
+		 cout << endl;
+		 gameOver = true;
+	 }
+	 else if ((creatureHealth[2] <= 0) && (heroStrength > 0))
+	 {
+		 
+		 cout << endl;
+		 cout << "You have defeated all your foes and collected all the treasure! good job!";
+		 cout << endl;
+		 gameOver = true;
+	 }
+	 else
+	 {
+		 gameOver = false;
+	 }
+	 return gameOver;
+ }
