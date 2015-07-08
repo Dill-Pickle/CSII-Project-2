@@ -118,6 +118,28 @@ void move(int road[], int N, int hero_pos,int one, int two, int three)
 						heropow -= monster;
 						hero_pos = heropow;
 				}
+				if (hero_pos == two)
+				{
+					hero = rand() % heropow;
+					monster = rand() % 5;
+
+					cout << "Hero rolled a " << heropow << " Monster rolled a " << monster;
+					if (heropow < monster)
+						cout << "You LOST" << endl
+						heropow -= monster;
+						hero_pos = heropow;
+				}
+				if (hero_pos == three)
+				{
+					hero = rand() % heropow;
+					monster = rand() % 7;
+
+					cout << "Hero rolled a " << heropow << " Monster rolled a " << monster;
+					if (heropow < monster)
+						cout << "You LOST" << endl
+						heropow -= monster;
+						hero_pos = heropow;
+				}
 			}
 			else hero_pos += 1;
 		}
