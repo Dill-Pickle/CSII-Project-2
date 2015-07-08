@@ -4,7 +4,7 @@
 using namespace std;
 
 void show(int [],int);
-void creatures(int [], int, int, int, int);
+void creatures(int [], int, int, int, int, int);
 void move(int[],int,int,int,int,int);
 void gameover();
 
@@ -34,7 +34,7 @@ void show(int road[], int N)
 	cout << endl;
 }
 
-void creatures(int road[], int N, int one, int two, int three)
+void creatures(int road[], int N,int hero_pos, int one, int two, int three)
 {
 	int hero_pos = 0;
 	one= rand() % 9 + 1;
