@@ -14,9 +14,9 @@ void main()
 	const int N = 10;
 	int road[N];
 	int hero_pos;
-	int one;
-	int two;
-	int three;
+	int one=0;
+	int two=0;
+	int three=0;
 
 	for (int i = 0; i < N; i++) road[i] = 0;
 
